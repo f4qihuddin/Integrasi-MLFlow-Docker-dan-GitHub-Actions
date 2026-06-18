@@ -40,7 +40,7 @@ jobs:
       - name: Run mlflow project
         env:
           MLFLOW_ALLOW_FILE_STORE: true
-          MLFLOW_TRACKING_URI: file:./mlruns
+          MLFLOW_TRACKING_URI: file://${{ github.workspace }}/mlruns
         run: |
           mlflow run . --env-manager=local 
       
@@ -50,13 +50,17 @@ jobs:
           RUN_ID=$(cat run_id.txt)
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
           echo "Latest run_id: $RUN_ID"
+          echo "Verifying run exists:"
+          ls -la mlruns/0/$RUN_ID/
           
       # Build Docker Model
       - name: Build Docker Model
         env:
           MLFLOW_ALLOW_FILE_STORE: true
-          MLFLOW_TRACKING_URI: file:./mlruns
+          MLFLOW_TRACKING_URI: file://${{ github.workspace }}/mlruns
         run: |
+          echo "Using tracking URI: file://${{ github.workspace }}/mlruns"
+          echo "Building model for run: $RUN_ID"
           mlflow models build-docker --model-uri "runs:/${RUN_ID}/model" --name "cc" 
 
       # Login to Docker Hub

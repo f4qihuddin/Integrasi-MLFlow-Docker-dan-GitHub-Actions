@@ -9,8 +9,8 @@ import sys
 
 if __name__ == "__main__":
     os.environ["MLFLOW_ALLOW_FILE_STORE"] = "true"
-    tracking_uri = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mlruns")
-    mlflow.set_tracking_uri(f"file:{tracking_uri}")
+    tracking_uri = os.path.abspath("mlruns")
+    mlflow.set_tracking_uri(f"file://{tracking_uri}")
     print(f"MLflow tracking URI: {mlflow.get_tracking_uri()}")
     warnings.filterwarnings("ignore")
     np.random.seed(40)
